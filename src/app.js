@@ -2,6 +2,11 @@ const express = require("express");
 
 const app = express();
 
+app.get("/user/:userId/:name/:password", (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    res.send({firstname:"Raja", lastname:"Manish"});
+});
+
 // order of routing matters && this will match all HTTP methods
 app.use("/user", (req, res) => {
     res.set('Cache-Control', 'no-store');
