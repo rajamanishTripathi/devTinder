@@ -87,6 +87,7 @@ app.get("/getUserData",(req,res)=> {
 
 });
 // if something breaks it will be caught in this below logic
+// order (err,req,res,next) is very important
 app.use("/",(err,req,res,next)=> {
     if(err){
     res.status(500).send("something went wrong");
