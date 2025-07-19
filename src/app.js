@@ -86,7 +86,7 @@ app.get("/getUserData",(req,res)=> {
     // }
 
 });
-
+// if something breaks it will be caught in this below logic
 app.use("/",(err,req,res,next)=> {
     if(err){
     res.status(500).send("something went wrong");
