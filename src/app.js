@@ -2,194 +2,81 @@ const express = require("express");
 
 const app = express();
 
+const { adminAuth, adminUser} = require("./middlewares/auth");
+
+app.use("/admin",adminAuth);
+
+app.use("/user",adminUser);
+
+app.get("/user",(req,res)=> {
+    res.send("User data send");
+});
+
+// since user is a single route we can skip line no app.use("/user",adminUser); and write as below
+// app.get("/user",adminUser, (req,res)=> {
+//     res.send("User data send");
+// });
+app.get("/user/login",(req,res)=> {
+    res.send("User login");
+});
+
+
+app.get("/admin",(req,res)=> {
+    res.send("Admin access");
+});
+
+app.get("/admin/getAllData", (req , res) => {
+    res.send("Fetch admin data ");
+});
+
+app.get("/admin/deleteUser", (req , res) => {
+    res.send("User Deleted");
+});
+// // part 1
+// app.use("/try",(req,res) => {
+//     console.log("handling route user 1");
+//     next();
+// });
+
+// app.use("/try",(req,res) => {
+//     console.log("handling route user 2");
+//     res.send("Respond 2");
+// });
+
+
+// //part 2
+// app.use("/try",(req,res) => {
+//     console.log("handling route user 2");
+//   //  res.send("Respond 2");
+//     next();
+// });
 
 // app.use("/try",(req,res) => {
 //     console.log("handling route user 1");
-//     res.send("Respond 1");
-// }, (req,res) => {
-//      console.log("handling route user 2");
-//     res.send("Respond 2");
-
+//     next();
 // });
 
-// app.use("/try",(req,res,next) => {
+// // result cannot get 
+
+
+// //part 3
+// app.get("/try",(req,res,next) => {
 //     console.log("handling route user 1");
-//     res.send("Respond 1");
 //     next();
-// }, (req,res,next) => {
-//      console.log("handling route user 2");
-//     res.send("Respond 2");
-
-// });
-
-// app.use("/try",(req,res,next) => {
+// },(req,res,next) => {
 //     console.log("handling route user 1");
-//    // res.send("Respond 1");
 //     next();
-// }, (req,res,next) => {
-//      console.log("handling route user 2");
-//     res.send("Respond 2");
-
-// });
-
-// app.use("/try",(req,res,next) => {
+// },(req,res) => {
 //     console.log("handling route user 1");
-//    // res.send("Respond 1");
-//     next();
-//     }, (req,res,next) => {
-//         console.log("handling route user 2");
-//         res.send("Respond 2");
-//         next();
-//     },(req,res,next) => {
-//         console.log("handling route user 3");
-//         res.send("Respond 3");
-
-//     },(req,res,next) => {
-//         console.log("handling route user 4");
-//         res.send("Respond 4");
-
-//     }
+//     res.send("Send data");
+// }
 // );
 
 
-// app.use("/try",(req,res,next) => {
-//     console.log("handling route user 1");
-//    // res.send("Respond 1");
-//     next();
-//     }, (req,res,next) => {
-//         console.log("handling route user 2");
-//      //   res.send("Respond 2");
-//         next();
-//     },(req,res,next) => {
-//         console.log("handling route user 3");
-//         res.send("Respond 3");
-//         next();
-//     },(req,res,next) => {
-//         console.log("handling route user 4");
-//         res.send("Respond 4");
-
-//     }
-// );
-
-// app.use("/try",(req,res,next) => {
-//     console.log("handling route user 1");
-//    // res.send("Respond 1");
-//     next();
-//     }, (req,res,next) => {
-//         console.log("handling route user 2");
-//      //   res.send("Respond 2");
-//         next();
-//     },(req,res,next) => {
-//         console.log("handling route user 3");
-//       //  res.send("Respond 3");
-//         next();
-//     },(req,res,next) => {
-//         console.log("handling route user 4");
-//         res.send("Respond 4");
-
-//     }
-// );
-
-// app.use("/try",(req,res,next) => {
-//     console.log("handling route user 1");
-//    // res.send("Respond 1");
-//     next();
-//     }, (req,res,next) => {
-//         console.log("handling route user 2");
-//      //   res.send("Respond 2");
-//         next();
-//     },(req,res,next) => {
-//         console.log("handling route user 3");
-//       //  res.send("Respond 3");
-//         next();
-//     },(req,res,next) => {
-//         console.log("handling route user 4");
-//      //   res.send("Respond 4");
-//         next();
-//     }
-// );
-
-
-// Multiple route handlers
-app.use("/router",[rH1,rH2],rH3);
-app.use("/router",rH1,[rH2,rH3]);
-
-app.use("/try",[(req,res,next) => {
-    console.log("handling route user 1");
-   // res.send("Respond 1");
-    next();
-    }, (req,res,next) => {
-        console.log("handling route user 2");
-     //   res.send("Respond 2");
-        next();
-    },(req,res,next) => {
-        console.log("handling route user 3");
-      //  res.send("Respond 3");
-        next();
-    },(req,res,next) => {
-        console.log("handling route user 4");
-      //  res.send("Respond 4");
-       next();
-    }
-]);
 
 
 
-
-// use regrex or other methods like + ,(),*
-// app.get("/user/:userId/:name/:password", (req, res) => {
-//     res.set('Cache-Control', 'no-store');
-//     res.send({firstname:"Raja", lastname:"Manish"});
-// });
-
-// // order of routing matters && this will match all HTTP methods
-// app.use("/user", (req, res) => {
-//     res.set('Cache-Control', 'no-store');
-//     res.send("order matters");
-// });
-
-// app.get("/user", (req, res) => {
-//     res.set('Cache-Control', 'no-store');
-//     res.send({firstname:"Raja", lastname:"Manish"});
-// });
-
-// app.post("/user", (req, res) => {
-//     //saving to db
-//     res.set('Cache-Control', 'no-store');
-//     res.send("User created successfully");
-// });
-
-// app.delete("/user", (req, res) => {
-//     res.set('Cache-Control', 'no-store');
-//     res.send("User successfully deleted");
-// });
-
-// app.patch("/user", (req, res) => {
-//     res.set('Cache-Control', 'no-store');
-//     res.send("User successfully updated");
-// });
-
-// // order of routing matters
-// app.use("/rest/1", (req, res) => {
-//     res.set('Cache-Control', 'no-store');
-//     res.send("Hello from Rest 1111");
-// });
-
-// app.use("/rest", (req, res) => {
-//     res.set('Cache-Control', 'no-store');
-//     res.send("Hello from Rest");
-// });
-
-
-
-// app.use("/", (req, res) => {
-//     res.send("Hello from Express");
-// });
 
 app.listen(7777, () => {
     console.log("Server at 7777...");
 });
-
-// curl http://localhost:7777/this
-// curl http://localhost:7777/rest
-// curl http://localhost:7777/
