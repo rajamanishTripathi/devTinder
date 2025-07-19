@@ -2,78 +2,96 @@ const express = require("express");
 
 const app = express();
 
-const { adminAuth, adminUser} = require("./middlewares/auth");
 
-app.use("/admin",adminAuth);
+// case 1
+// app.use("/",(err,req,res,next)=> {
+//     if(err){
+//     res.status(500).send("Error");
+//     }
+// });
 
-app.use("/user",adminUser);
+// app.get("/getUserData",(req,res)=> {
 
-app.get("/user",(req,res)=> {
-    res.send("User data send");
-});
-
-// since user is a single route we can skip line no app.use("/user",adminUser); and write as below
-// app.get("/user",adminUser, (req,res)=> {
+//     throw new Error ('gggggg');
 //     res.send("User data send");
 // });
-app.get("/user/login",(req,res)=> {
-    res.send("User login");
-});
 
-
-app.get("/admin",(req,res)=> {
-    res.send("Admin access");
-});
-
-app.get("/admin/getAllData", (req , res) => {
-    res.send("Fetch admin data ");
-});
-
-app.get("/admin/deleteUser", (req , res) => {
-    res.send("User Deleted");
-});
-// // part 1
-// app.use("/try",(req,res) => {
-//     console.log("handling route user 1");
-//     next();
+//case 2
+// app.get("/getUserData",(req,res)=> {
+// // logic of db call for getting user data
+//     throw new Error ('Error getting data');
+//     res.send("User data send");
+// });
+// // if there is error in any of the route and 
+// // "/" is a wildcard match. it matches all patch
+// app.use("/",(err,req,res,next)=> {
+//     if(err){
+//     res.status(500).send("something went wrong");
+//     }
 // });
 
-// app.use("/try",(req,res) => {
-//     console.log("handling route user 2");
-//     res.send("Respond 2");
+// // case 3
+// app.get("/getUserData",(req,res)=> {
+
+//     try{
+//     // logic of db call for getting user data
+//     throw new Error ('Error getting data');
+//     res.send("User data send");
+//     }catch{
+//        res.status(500).send("some error from the team");
+//     }
+
+// });
+// app.use("/",(err,req,res,next)=> {
+//     if(err){
+//     res.status(500).send("something went wrong");
+//     }
+// });
+
+// // case 4
+// app.use("/",(err,req,res,next)=> {
+//     if(err){
+//     res.status(500).send("something went wrong");
+//     }
+// });
+
+// app.get("/getUserData",(req,res)=> {
+
+//     try{
+//     // logic of db call for getting user data
+//     throw new Error ('Error getting data');
+//     res.send("User data send");
+//     }catch{
+//        res.status(500).send("some error from the team");
+//     }
+
 // });
 
 
-// //part 2
-// app.use("/try",(req,res) => {
-//     console.log("handling route user 2");
-//   //  res.send("Respond 2");
-//     next();
-// });
+// case 5
+app.use("/",(err,req,res,next)=> {
+    if(err){
+    res.status(500).send("something went wrong");
+    }
+});
 
-// app.use("/try",(req,res) => {
-//     console.log("handling route user 1");
-//     next();
-// });
+app.get("/getUserData",(req,res)=> {
 
-// // result cannot get 
+  //  try{
+    // logic of db call for getting user data
+    throw new Error ('Error getting data');
+    res.send("User data send");
+    // }catch{
+    //    res.status(500).send("some error from the team");
+    // }
 
+});
 
-// //part 3
-// app.get("/try",(req,res,next) => {
-//     console.log("handling route user 1");
-//     next();
-// },(req,res,next) => {
-//     console.log("handling route user 1");
-//     next();
-// },(req,res) => {
-//     console.log("handling route user 1");
-//     res.send("Send data");
-// }
-// );
-
-
-
+app.use("/",(err,req,res,next)=> {
+    if(err){
+    res.status(500).send("something went wrong");
+    }
+});
 
 
 
