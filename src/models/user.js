@@ -13,7 +13,14 @@ const userSchema = mongoose.Schema({
         type: String,
         required:true,
         unique:true,
-        trim:true
+        trim:true,
+        validate: {
+            validator: function (value) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+            },
+            message: 'Invalid email address format',
+            }
+        
     },
     password: {
         type: String,

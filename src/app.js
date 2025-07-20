@@ -43,19 +43,27 @@ app.delete("/user",async(req, res) => {
 
 //update api
 // any other data that are not part of db schema  is ignored by apis and not inserted 
-app.patch("/user",async(req, res) => {
-    const userId = req.body.userId;
+app.patch("/user/:userId",async(req, res) => {
+    const userId = req.params?.userId;
     const data = req.body;
-    console.log(data);
+ 
     try{
-        // await User.findByIdAndUpdate({_id: userId}, data);
-        // const user =  await User.findByIdAndUpdate({_id: userId}, data,{ returnDocument:"before"});
-        // const user =  await User.findByIdAndUpdate({_id: userId}, data,{ returnDocument:"after"});
-        // console.log(user);
+        const ALLOWED_UPDATE = ["about", "photourl", "gender", "age", "skills"];
+        const isUpdateAllowed = Object.keys(data).every((k) => ALLOWED_UPDATE.includes(k));
+
+        if(data.skills.length > 0){
+            throw new Error ("skills cannot be more than 10");
+        }
+
+        if(!isUpdateAllowed){
+            throw new Error("Update not Allowed");
+        }
+
         const user =  await User.findByIdAndUpdate({_id: userId}, data,{ returnDocument:"before", runValidators:true});
-            res.send("User Successfully Updated");      
+            res.send("User Successfully Updated");   
+            console.log(data);   
     }catch(err){
-        res.status(400).send('Update failed' + err.message);
+        res.status(400).send('Update failed:  ' + err.message);
     }
 });
 
