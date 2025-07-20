@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const userSchema = mongoose.Schema({
     firstName: {
@@ -14,12 +15,11 @@ const userSchema = mongoose.Schema({
         required:true,
         unique:true,
         trim:true,
-        validate: {
-            validator: function (value) {
-                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-            },
-            message: 'Invalid email address format',
+        validate(value){
+            if(!validator.isEmpty(value)){
+                throw new Error ("Invalid Email." + value);
             }
+        }
         
     },
     password: {
@@ -40,7 +40,12 @@ const userSchema = mongoose.Schema({
     },
     photourl:{
          type: String,
-         default: "https://pixabay.com/vectors/blank-profile-picture-mystery-man-973460/"
+         default: "https://pixabay.com/vectors/blank-profile-picture-mystery-man-973460/",
+          validate(value){
+            if(!validator.isUrl(value)){
+                throw new Error ("Invalid Email." + value);
+            }
+        }
     },
      about:{
          type: String,
