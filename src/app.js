@@ -29,15 +29,32 @@ app.post("/signup", async(req,res) => {
 
 // for db operations always do async, awaits for apis
 // get user by  email
+// app.get("/user",async(req, res) => {
+//     const userEmail = req.body.emailId;
+
+//     try{
+//        const users = await User.find({emailId: userEmail});
+//        if(users.length === 0){
+//         res.status(404).send("User not found")
+//        }else{
+//             res.send(users);
+//        }
+      
+//     }catch(err){
+//         res.status(400).send('Something went wrong');
+//     }
+// });
+
+//findOne
 app.get("/user",async(req, res) => {
     const userEmail = req.body.emailId;
 
     try{
-       const users = await User.find({emailId: userEmail});
-       if(users.length === 0){
+       const user = await User.findOne({emailId: userEmail});
+       if(!user){
         res.status(404).send("User not found")
        }else{
-            res.send(users);
+            res.send(user);
        }
       
     }catch(err){
