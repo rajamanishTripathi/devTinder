@@ -27,40 +27,37 @@ app.post("/signup", async(req,res) => {
 
 });
 
-// for db operations always do async, awaits for apis
-// get user by  email
-// app.get("/user",async(req, res) => {
-//     const userEmail = req.body.emailId;
-
-//     try{
-//        const users = await User.find({emailId: userEmail});
-//        if(users.length === 0){
-//         res.status(404).send("User not found")
-//        }else{
-//             res.send(users);
-//        }
-      
-//     }catch(err){
-//         res.status(400).send('Something went wrong');
-//     }
-// });
-
-//findOne
-app.get("/user",async(req, res) => {
-    const userEmail = req.body.emailId;
+// for db operations for delete apis
+app.delete("/user",async(req, res) => {
+    const userId = req.body.userId;
 
     try{
-       const user = await User.findOne({emailId: userEmail});
-       if(!user){
-        res.status(404).send("User not found")
-       }else{
-            res.send(user);
-       }
+       // await User.findByIdAndDelete({_id: userId});
+        await User.findByIdAndDelete(userId);
+        res.send("User Successfully Deleted");
       
     }catch(err){
         res.status(400).send('Something went wrong');
     }
 });
+
+//update api
+// any other data that are not part of db schema  is ignored by apis and not inserted 
+app.patch("/user",async(req, res) => {
+    const userId = req.body.userId;
+    const data = req.body;
+    console.log(data);
+    try{
+        await User.findByIdAndUpdate({_id: userId}, data);
+        // const user =  await User.findByIdAndUpdate({_id: userId}, data,{ returnDocument:"before"});
+        // const user =  await User.findByIdAndUpdate({_id: userId}, data,{ returnDocument:"after"});
+        // console.log(user);
+            res.send("User Successfully Updated");      
+    }catch(err){
+        res.status(400).send('Something went wrong');
+    }
+});
+
 
 
 // get all users from database
