@@ -3,6 +3,8 @@ const connectDb = require("./config/database");
 const app = express();
 const User = require("./models/user");
 const { default: mongoose } = require("mongoose");
+const {validateSignupData} = require("./utils/validation");
+const bcrypt = require("bcrypt");
 
 
 // express.json() acts as middleware for the app
@@ -14,9 +16,20 @@ app.use(express.json());
 
 app.post("/signup", async(req,res) => {
 
+    validateSignupData(req);
+
+    const {firstName, lastName, emailId, password} = req.body;
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
     // console.log(req.body);
     // creating new instance of user model
-    const user = new User(req.body);
+    const user = await new User({
+        firstName,
+        lastName,
+        emailId,
+        password: passwordHash
+    });
 
     try{
     await user.save();
@@ -25,6 +38,28 @@ app.post("/signup", async(req,res) => {
     res.status(400).send("Error saving the user:" + err.message);
     }
 
+});
+
+app.post("/login", async (req,res) => {
+    
+    try{
+        const {emailId , password} = req.body;
+        const user = await User.findOne({emailId: emailId});
+       console.log(user);
+       if(!user){
+        throw new Error("Invalid credentails");
+       }
+
+       const isPasswordValid = await bcrypt.compare(password, user.password);
+       if(isPasswordValid){
+           res.send("Login  Successful yeahhhhhhh");
+       }else{
+         throw new Error("Invalid credentails");
+       }
+      
+    }catch (err){
+        res.status(400).send("Something went wrong....." + err.message);
+    }
 });
 
 // for db operations for delete apis

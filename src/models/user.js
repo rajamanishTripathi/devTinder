@@ -16,7 +16,7 @@ const userSchema = mongoose.Schema({
         unique:true,
         trim:true,
         validate(value){
-            if(!validator.isEmpty(value)){
+            if(!validator.isEmail(value)){
                 throw new Error ("Invalid Email." + value);
             }
         }
@@ -42,8 +42,8 @@ const userSchema = mongoose.Schema({
          type: String,
          default: "https://pixabay.com/vectors/blank-profile-picture-mystery-man-973460/",
           validate(value){
-            if(!validator.isUrl(value)){
-                throw new Error ("Invalid Email." + value);
+            if(!validator.isURL(value)){
+                throw new Error ("Invalid Url." + value);
             }
         }
     },
