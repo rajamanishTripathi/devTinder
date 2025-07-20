@@ -2,6 +2,7 @@ const express = require("express");
 const connectDb = require("./config/database");
 const app = express();
 const User = require("./models/user");
+const { default: mongoose } = require("mongoose");
 
 
 // express.json() acts as middleware for the app
@@ -25,6 +26,37 @@ app.post("/signup", async(req,res) => {
     }
 
 });
+
+// for db operations always do async, awaits for apis
+// get user by  email
+app.get("/user",async(req, res) => {
+    const userEmail = req.body.emailId;
+
+    try{
+       const users = await User.find({emailId: userEmail});
+       if(users.length === 0){
+        res.status(404).send("User not found")
+       }else{
+            res.send(users);
+       }
+      
+    }catch(err){
+        res.status(400).send('Something went wrong');
+    }
+});
+
+
+// get all users from database
+app.get("/feed", async(req,res) =>{
+         try {
+            const users = await User.find({});
+            res.send(users);
+         } catch (error) {
+            res.status(400).send("something went wrong");
+         }
+});
+
+
 // start listening/making api call after connecting to database
 connectDb()
     .then(() => {
