@@ -5,6 +5,8 @@ const User = require("./models/user");
 const { default: mongoose } = require("mongoose");
 const {validateSignupData} = require("./utils/validation");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 
 
 // express.json() acts as middleware for the app
@@ -13,6 +15,8 @@ const bcrypt = require("bcrypt");
 // adds this javascript object back to the request(req) in the body. 
 // then req.body is javascript object and read by express
 app.use(express.json());
+app.use(cookieParser());
+
 
 app.post("/signup", async(req,res) => {
 
@@ -45,20 +49,58 @@ app.post("/login", async (req,res) => {
     try{
         const {emailId , password} = req.body;
         const user = await User.findOne({emailId: emailId});
-       console.log(user);
-       if(!user){
+        console.log(user);
+        if(!user){
         throw new Error("Invalid credentails");
-       }
+        }
 
        const isPasswordValid = await bcrypt.compare(password, user.password);
        if(isPasswordValid){
-           res.send("Login  Successful yeahhhhhhh");
-       }else{
-         throw new Error("Invalid credentails");
-       }
+        //Create a JWT 
+        const token = await jwt.sign({_id: user._id}, "Jwt@123parser");
+        console.log(token);
+
+        //Add token to cookie and send response back to user
+        res.cookie("token",token);
+        res.send("Login  Successful yeahhhhhhh");
+
+        } else {
+            throw new Error("Invalid credentails");
+        }
       
     }catch (err){
-        res.status(400).send("Something went wrong....." + err.message);
+        res.status(400).send("ERROR " + err.message);
+    }
+});
+
+
+app.get("/profile", async (req,res) => {
+    try {
+         const cookie = req.cookies;
+
+     const { token } = cookie;
+     if(!token){
+        throw new Error("Invalid Token");
+     }
+
+     //verify this token
+     const decodedMessage = await jwt.verify(token,"Jwt@123parser");
+
+     console.log(decodedMessage);
+     const { _id } = decodedMessage;
+     console.log("LOgged in user is: " + _id);
+
+     const user = await User.findById(_id);
+
+     if(!user){
+        throw new Error("User doesnot exit.");
+     }
+
+
+    // console.log(cookie);
+       res.send(user);
+    } catch (error) {
+        res.status(400).send("ERROR " + err.message);
     }
 });
 
