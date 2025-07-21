@@ -7,6 +7,7 @@ const {validateSignupData} = require("./utils/validation");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const {userAuth} = require("./middlewares/auth");
 
 
 // express.json() acts as middleware for the app
@@ -74,30 +75,10 @@ app.post("/login", async (req,res) => {
 });
 
 
-app.get("/profile", async (req,res) => {
+app.get("/profile",userAuth, async(req,res) => {
     try {
-         const cookie = req.cookies;
+        const user = req.user;
 
-     const { token } = cookie;
-     if(!token){
-        throw new Error("Invalid Token");
-     }
-
-     //verify this token
-     const decodedMessage = await jwt.verify(token,"Jwt@123parser");
-
-     console.log(decodedMessage);
-     const { _id } = decodedMessage;
-     console.log("LOgged in user is: " + _id);
-
-     const user = await User.findById(_id);
-
-     if(!user){
-        throw new Error("User doesnot exit.");
-     }
-
-
-    // console.log(cookie);
        res.send(user);
     } catch (error) {
         res.status(400).send("ERROR " + err.message);
