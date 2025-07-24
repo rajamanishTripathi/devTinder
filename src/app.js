@@ -56,7 +56,7 @@ app.post("/login", async (req,res) => {
         }
 
        const isPasswordValid = await user.validatePassword(password);
-       
+
        if(isPasswordValid){
         const  token = await user.getJWT();
 
@@ -72,6 +72,11 @@ app.post("/login", async (req,res) => {
         res.status(400).send("ERROR " + err.message);
     }
 });
+
+app.post("/sendConnectionRequest",userAuth, async(req,res){
+    const user = req.user;
+    res.send(user.firstName +" send a connection request");
+})
 
 
 app.get("/profile",userAuth, async(req,res) => {
