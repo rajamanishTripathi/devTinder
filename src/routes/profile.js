@@ -39,4 +39,8 @@ profileRouter.patch("/profile/edit",userAuth, async(req,res) =>{
      }
 });
 
+// Need to create api
+// profileRouter.post("/profile/forgetpassword",userAuth, async(req,res) => {
+// })
+
 module.exports = profileRouter;
