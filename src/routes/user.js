@@ -3,6 +3,7 @@ const userRouter = express.Router();
 
 const {userAuth} = require("../middlewares/auth");
 const ConnectionRequest = require("../models/connectionRequest");
+const User = require("../models/user");
 
 const USER_DATA = "firstName lastName age skills gender";
 
@@ -55,8 +56,11 @@ userRouter.get("/user/connections", userAuth , async(req,res) => {
 
 userRouter.get("/feed", userAuth , async(req,res) => {
         try{
-
             const loggedInUser = req.user;
+
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 10;
+            const skip = (page -1)*limit;
 
             const connectionRequests = await ConnectionRequest.find({
                 $or: [
@@ -75,7 +79,7 @@ userRouter.get("/feed", userAuth , async(req,res) => {
                 {_id:{ $nin: Array.from(hideUsersFromFeed)}},
                 {_id: { $ne: loggedInUser._id}}
                 ]
-            }).select(USER_DATA);
+            }).select(USER_DATA).skip().limit(limit);
 
            res.send(users);
         }
