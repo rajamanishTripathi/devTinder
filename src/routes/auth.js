@@ -48,7 +48,7 @@ authRouter.post("/login", async (req,res) => {
 
         //Add token to cookie and send response back to user
         res.cookie("token",token,{ expires: new Date(Date.now() + 8 * 3600000) }); // cookie expire in 8 hours
-        res.send("Login  Successful yeahhhhhhh");
+        res.send(user);
 
         } else {
             throw new Error("Invalid credentails");
