@@ -2,16 +2,14 @@ const express = require("express");
 const connectDb = require("./config/database");
 const app = express();
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
 
 
-// express.json() acts as middleware for the app
-// app.use will work for all the routes
-// express.json() read json object and converts it to javascript object
-// adds this javascript object back to the request(req) in the body. 
-// then req.body is javascript object and read by express
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+
 
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
