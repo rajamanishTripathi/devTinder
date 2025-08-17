@@ -67,7 +67,7 @@ userSchema.index({gender:1});
 userSchema.methods.getJWT = async function(){
     const user = this;
     //Create a JWT 
-    const token = await jwt.sign({_id: user._id}, "Jwt@123parser", {expiresIn:"1d"});
+    const token = await jwt.sign({_id: user._id}, process.env.JWT_SECRET, {expiresIn:"1d"});
     return token;
 };
 userSchema.methods.validatePassword = async function(passwordInputByUser){

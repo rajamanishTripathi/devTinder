@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 //devTinder is a db
 const connectDb = async() => {
-    await mongoose.connect("mongodb+srv://nodejs:BLhlYKgmbVDjupEY@namaste-node.lyconuo.mongodb.net/devTinder");
+    await mongoose.connect(process.env.DATABASE_CONNECTION_SECRET);
 };
 
 module.exports = connectDb;
